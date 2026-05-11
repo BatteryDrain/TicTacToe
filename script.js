@@ -6,10 +6,10 @@ let DISPLAY = [];
 let TURNNUM = 0;
 let DONE = [0,0,0,0,0,0,0,0,0];
 
-populate();
+await populate();
 
 
-function populate() {
+async function populate() {
     for(let i=0; i<9; i++){
         const bfig = document.createElement('figure');
         bfig.classList.add("dom");
@@ -24,7 +24,7 @@ function populate() {
                 if((cell.classList.contains("green") || (TURNNUM == 0)) && fig.textContent == ""){
                     fig.textContent = TURN;
                     DISPLAY[i][j] = TURN;
-                    win();
+                    await win();
                     flip();
                     green(i,j);
                     TURNNUM++;
