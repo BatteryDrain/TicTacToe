@@ -47,19 +47,17 @@ function flip(){
     } else if(TURN == "O"){
         TURN = "X";
     }
-    pieceSPC.textContent = "click to place" + TURN;
+    pieceSPC.textContent = "click to place " + TURN;
 }
 
 function win(){
     for(let i=0; i<9; i++){
         const cell = document.getElementById("DOM" + i);
         let temp = "";
-        for(let j=0; j<9; j++){
-            temp = temp + DISPLAY[i][j];
-        }
+        temp = DISPLAY[i][0] + DISPLAY[i][1] + DISPLAY[i][2] + "n" + DISPLAY[i][3] + DISPLAY[i][4] + DISPLAY[i][5] + "n" + DISPLAY[i][6] + DISPLAY[i][7] + DISPLAY[i][8];
         const horazontal = temp;
         temp = "";
-        temp = DISPLAY[i][0] + DISPLAY[i][3] + DISPLAY[i][6] + DISPLAY[i][1] + DISPLAY[i][4] + DISPLAY[i][7] + DISPLAY[i][2] + DISPLAY[i][5] + DISPLAY[i][8];
+        temp = DISPLAY[i][0] + DISPLAY[i][3] + DISPLAY[i][6] + "n" + DISPLAY[i][1] + DISPLAY[i][4] + DISPLAY[i][7] + "n" + DISPLAY[i][2] + DISPLAY[i][5] + DISPLAY[i][8];
         const vertical = temp;
         temp = "";
         for(let j=0; j<9; j++){
@@ -82,18 +80,22 @@ function win(){
             if(horazontal.includes(CHECK[check])){
                 cell.innerHTML = "";
                 cell.textContent = CHECK[check][0];
+                cell.style.padding = "3vw 6vw";
                 console.log("winH " + horazontal);
             }else if(vertical.includes(CHECK[check])){
                 cell.innerHTML = "";
                 cell.textContent = CHECK[check][0];
+                cell.style.padding = "3vw 6vw";
                 console.log("winV " + vertical);
             }else if(diagonalL == CHECK[check]){
                 cell.innerHTML = "";
                 cell.textContent = CHECK[check][0];
+                cell.style.padding = "3vw 6vw";
                 console.log("winDL " + diagonalL);
             }else if(diagonalR == CHECK[check]){
                 cell.innerHTML = "";
                 cell.textContent = CHECK[check][0];
+                cell.style.padding = "3vw 6vw";
                 console.log("winDR " + diagonalR);
             }
         }
@@ -105,10 +107,18 @@ function win(){
 
 function green(big,small){
     for(let i=0; i<9; i++){
-        console.log("in");
         const cell = document.getElementById("DOM" + i);
         cell.classList.remove("green");
     }
     const cellToGreen = document.getElementById("DOM" + small);
-    cellToGreen.classList.add("green");
+    if(cellToGreen.innerHTML.includes("<")){
+        cellToGreen.classList.add("green");
+    } else {
+        for(let i=0; i<9; i++){
+            const cell = document.getElementById("DOM" + i);
+            if(cellToGreen.innerHTML.includes("<")){
+                cell.classList.add("green");
+            }
+        }
+    }
 }
