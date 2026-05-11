@@ -24,7 +24,9 @@ function populate() {
                 if((cell.classList.contains("green") || (TURNNUM == 0)) && fig.textContent == ""){
                     fig.textContent = TURN;
                     DISPLAY[i][j] = TURN;
-                    await win();
+                    for(let i=0; i<9; i++){
+                        await win(DISPLAY, i, false);
+                    }
                     flip();
                     green(i,j);
                     TURNNUM++;
@@ -51,75 +53,49 @@ function flip(){
     pieceSPC.textContent = "click to place " + TURN;
 }
 
-async function win(){
-    for(let i=0; i<9; i++){
-        const cell = document.getElementById("DOM" + i);
-        let temp = "";
-        temp = DISPLAY[i][0] + DISPLAY[i][1] + DISPLAY[i][2] + "n" + DISPLAY[i][3] + DISPLAY[i][4] + DISPLAY[i][5] + "n" + DISPLAY[i][6] + DISPLAY[i][7] + DISPLAY[i][8];
-        const horazontal = temp;
-        temp = "";
-        temp = DISPLAY[i][0] + DISPLAY[i][3] + DISPLAY[i][6] + "n" + DISPLAY[i][1] + DISPLAY[i][4] + DISPLAY[i][7] + "n" + DISPLAY[i][2] + DISPLAY[i][5] + DISPLAY[i][8];
-        const vertical = temp;
-        temp = "";
-        for(let j=0; j<9; j++){
-            const list = [0,4,8];
-            if(list.includes(j)){
-                temp = temp + DISPLAY[i][j];
-            }
-        }
-        const diagonalL = temp;
-        temp = "";
-        for(let j=0; j<9; j++){
-            const list = [2,4,6];
-            if(list.includes(j)){
-                temp = temp + DISPLAY[i][j];
-            }
-        }
-        const diagonalR = temp;
-        const CHECK = ["XXX","OOO"];
-        for( let check=0; check<2; check++){
-            if(horazontal.includes(CHECK[check])){
-                if(DONE[i] == 0){
-                    await fade(cell, 0);
-                    cell.style.backgroundColor = "";
-                    DONE[i] = 1;
-                }
-                cell.textContent = CHECK[check][0];
+async function win(Barray, i, isBigBoard = false) {
+    let cell = "";
+    if (isBigBoard == false) {
+        cell = document.getElementById("DOM" + i);
+    }
+
+    
+    let horazontal, vertical, diagonalL, diagonalR;
+
+    if (isBigBoard) {
+        // Logic for 1D array (DONE)
+        horazontal = Barray[0] + Barray[1] + Barray[2] + "n" + Barray[3] + Barray[4] + Barray[5] + "n" + Barray[6] + Barray[7] + Barray[8];
+        vertical = Barray[0] + Barray[3] + Barray[6] + "n" + Barray[1] + Barray[4] + Barray[7] + "n" + Barray[2] + Barray[5] + Barray[8];
+        diagonalL = Barray[0] + Barray[4] + Barray[8];
+        diagonalR = Barray[2] + Barray[4] + Barray[6];
+    } else {
+        // Logic for 2D array (DISPLAY[i])
+        horazontal = Barray[i][0] + Barray[i][1] + Barray[i][2] + "n" + Barray[i][3] + Barray[i][4] + Barray[i][5] + "n" + Barray[i][6] + Barray[i][7] + Barray[i][8];
+        vertical = Barray[i][0] + Barray[i][3] + Barray[i][6] + "n" + Barray[i][1] + Barray[i][4] + Barray[i][7] + "n" + Barray[i][2] + Barray[i][5] + Barray[i][8];
+        diagonalL = Barray[i][0] + Barray[i][4] + Barray[i][8];
+        diagonalR = Barray[i][2] + Barray[i][4] + Barray[i][6];
+    }
+
+    const CHECK = ["XXX", "OOO"];
+    for (let check = 0; check < 2; check++) {
+        const combo = CHECK[check];
+        if (horazontal.includes(combo) || vertical.includes(combo) || diagonalL === combo || diagonalR === combo) {
+            if (isBigBoard) {
+                alert(combo[0] + " WINS!");
+                return; 
+            } else if (DONE[i] == 0) {
+                await fade(cell, 0);
+                cell.style.backgroundColor = "";
+                DONE[i] = combo[0];
+                cell.textContent = combo[0];
                 cell.style.padding = "3vw 6vw";
-                console.log("winH " + horazontal);
-            }else if(vertical.includes(CHECK[check])){
-                if(DONE[i] == 0){
-                    await fade(cell, 0);
-                    cell.style.backgroundColor = "";
-                    DONE[i] = 1;
-                }
-                cell.textContent = CHECK[check][0];
-                cell.style.padding = "3vw 6vw";
-                console.log("winV " + vertical);
-            }else if(diagonalL == CHECK[check]){
-                if(DONE[i] == 0){
-                    await fade(cell, 0);
-                    cell.style.backgroundColor = "";
-                    DONE[i] = 1;
-                }
-                cell.textContent = CHECK[check][0];
-                cell.style.padding = "3vw 6vw";
-                console.log("winDL " + diagonalL);
-            }else if(diagonalR == CHECK[check]){
-                if(DONE[i] == 0){
-                    await fade(cell, 0);
-                    cell.style.backgroundColor = "";
-                    DONE[i] = 1;
-                }
-                cell.textContent = CHECK[check][0];
-                cell.style.padding = "3vw 6vw";
-                console.log("winDR " + diagonalR);
-            } else if(!DISPLAY[i].includes("-")){
-            cell.innerHTML = "";
+                
+                await win(DONE, 0, true);
             }
         }
     }
 }
+
 
 function green(big,small){
     for(let i=0; i<9; i++){
