@@ -6,10 +6,10 @@ let DISPLAY = [];
 let TURNNUM = 0;
 let DONE = [0,0,0,0,0,0,0,0,0];
 
-await populate();
+populate();
 
 
-async function populate() {
+function populate() {
     for(let i=0; i<9; i++){
         const bfig = document.createElement('figure');
         bfig.classList.add("dom");
@@ -19,7 +19,7 @@ async function populate() {
         for(let j=0; j<9; j++){
             const fig = document.createElement('figure');
             fig.classList.add("sub");
-            fig.addEventListener("click", () => {
+            fig.addEventListener("click", async() => {
                 const cell = document.getElementById("DOM" + i);
                 if((cell.classList.contains("green") || (TURNNUM == 0)) && fig.textContent == ""){
                     fig.textContent = TURN;
