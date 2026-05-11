@@ -4,6 +4,7 @@ const bordSPC = document.getElementById("game");
 let TURN = "X";
 let DISPLAY = [];
 let TURNNUM = 0;
+let DONE = [0,0,0,0,0,0,0,0,0];
 
 populate();
 
@@ -50,7 +51,7 @@ function flip(){
     pieceSPC.textContent = "click to place " + TURN;
 }
 
-function win(){
+async function win(){
     for(let i=0; i<9; i++){
         const cell = document.getElementById("DOM" + i);
         let temp = "";
@@ -78,29 +79,44 @@ function win(){
         const CHECK = ["XXX","OOO"];
         for( let check=0; check<2; check++){
             if(horazontal.includes(CHECK[check])){
-                cell.innerHTML = "";
+                if(DONE[i] == 0){
+                    await fade(cell, 0);
+                    cell.style.backgroundColor = "";
+                    DONE[i] = 1;
+                }
                 cell.textContent = CHECK[check][0];
                 cell.style.padding = "3vw 6vw";
                 console.log("winH " + horazontal);
             }else if(vertical.includes(CHECK[check])){
-                cell.innerHTML = "";
+                if(DONE[i] == 0){
+                    await fade(cell, 0);
+                    cell.style.backgroundColor = "";
+                    DONE[i] = 1;
+                }
                 cell.textContent = CHECK[check][0];
                 cell.style.padding = "3vw 6vw";
                 console.log("winV " + vertical);
             }else if(diagonalL == CHECK[check]){
-                cell.innerHTML = "";
+                if(DONE[i] == 0){
+                    await fade(cell, 0);
+                    cell.style.backgroundColor = "";
+                    DONE[i] = 1;
+                }
                 cell.textContent = CHECK[check][0];
                 cell.style.padding = "3vw 6vw";
                 console.log("winDL " + diagonalL);
             }else if(diagonalR == CHECK[check]){
-                cell.innerHTML = "";
+                if(DONE[i] == 0){
+                    await fade(cell, 0);
+                    cell.style.backgroundColor = "";
+                    DONE[i] = 1;
+                }
                 cell.textContent = CHECK[check][0];
                 cell.style.padding = "3vw 6vw";
                 console.log("winDR " + diagonalR);
-            }
-        }
-        if(!DISPLAY[i].includes("-")){
+            } else if(!DISPLAY[i].includes("-")){
             cell.innerHTML = "";
+            }
         }
     }
 }
@@ -111,14 +127,31 @@ function green(big,small){
         cell.classList.remove("green");
     }
     const cellToGreen = document.getElementById("DOM" + small);
-    if(cellToGreen.innerHTML.includes("<")){
+    const text = cellToGreen.innerHTML
+    console.log(text);
+    if(text[0] == "<"){
         cellToGreen.classList.add("green");
     } else {
         for(let i=0; i<9; i++){
             const cell = document.getElementById("DOM" + i);
-            if(cellToGreen.innerHTML.includes("<")){
+            const text = cell.innerHTML
+            if(text[0] == "<"){
                 cell.classList.add("green");
             }
         }
     }
+}
+
+function fade(cell, transparent) {
+    return new Promise((resolve) => {
+        cell.style.backgroundColor = "rgba(255, 0, 0, " + transparent + ")";
+        
+        if (transparent >= 1) {
+            resolve();
+        } else {
+            setTimeout(() => {
+                fade(cell, transparent + 0.1).then(resolve);
+            }, 150);
+        }
+    });
 }
