@@ -8,18 +8,23 @@ body {
 }
 
 #game {
-    width: 60vw;
-    height: 60vw;
-    margin-left: 20vw;
+    width: 90vw;
+    height: 90vw;
+    margin-left: 7vw;
     margin-right: 5vw;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(20vw, 1fr));
+    grid-template-columns: repeat(auto-fit,minmax(30vw, 1fr));
+}
+
+main {
+    display: flex;
+    flex-direction: column;
 }
 
 .dom {
     aspect-ratio: 1 / 1;
     border: 1px black solid;
-    height: 20vw;
+    height: 30vw;
     margin: 0;
     font-size: 10vw;
     text-align: center;
@@ -62,4 +67,23 @@ body {
 
 .hide {
     display: none;
+}
+@media screen and (min-width: 800px) {
+    #game{
+        grid-template-columns: repeat(auto-fit,minmax(20vw, 1fr));
+    }
+
+    main {
+        flex-direction: row;
+    }
+
+    #game {
+        width: 60vw;
+        height: 60vw;
+        margin-left: 20vw;
+    }
+
+    .dom {
+        height: 20vw;
+    }
 }
